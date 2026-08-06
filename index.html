@@ -109,7 +109,8 @@
   .brain-dump{ margin:14px 0 4px; background:linear-gradient(135deg,#F1E7FA,#E4EFFB); border-radius:16px; padding:13px 15px; display:flex; align-items:center; gap:10px; }
   .brain-dump input{ flex:1; border:none; background:transparent; outline:none; font-family:'Nunito',sans-serif; font-weight:700; font-size:13px; color:var(--ink); }
   .brain-dump input::placeholder{ color:#8B84A8; font-weight:600; }
-  .brain-dump .ai-pill{ font-size:9.5px; font-weight:800; color:#fff; background:var(--ink); padding:5px 8px; border-radius:10px; white-space:nowrap; }
+  .brain-dump .ai-pill{ font-size:9.5px; font-weight:800; color:#fff; background:var(--ink); padding:5px 8px; border-radius:10px; white-space:nowrap; cursor:pointer; user-select:none; transition:opacity .15s ease; }
+  .brain-dump .ai-pill:active{ opacity:.7; }
 
   /* ---------- SCHOOL ---------- */
   .mock-note{ background:#FBF3DC; border:1px dashed #D9BE7A; color:#8A6A1E; font-size:11.5px; font-weight:700; padding:8px 12px; border-radius:12px; margin-bottom:12px; }
@@ -159,9 +160,11 @@
   .import-btn:active{ background:var(--focus-bg); }
   .total-badge{ text-align:center; font-size:11px; font-weight:700; color:var(--ink-soft); margin-bottom:12px; }
   .total-badge b{ color:var(--navy); }
-  .cal-card{ background:var(--card); border-radius:16px; padding:14px; box-shadow:0 2px 10px rgba(46,42,69,0.06); margin-bottom:10px; }
+  .cal-card{ background:var(--card); border-radius:16px; padding:14px; box-shadow:0 2px 10px rgba(46,42,69,0.06); margin-bottom:10px; cursor:pointer; }
   .cal-card .cal-title{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:13.5px; color:var(--navy); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
   .cal-card .cal-title .days-left{ font-size:9px; font-weight:800; color:#8A6A1E; background:var(--school-bg); padding:3px 8px; border-radius:8px; white-space:nowrap; }
+  .agenda-date-label{ font-family:'Nunito',sans-serif; font-weight:800; font-size:11px; color:var(--ink-soft); margin:14px 0 6px; text-transform:uppercase; letter-spacing:.03em; }
+  .agenda-date-label:first-child{ margin-top:2px; }
   .cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:3px; text-align:center; }
   .cal-grid .dow{ font-size:8.5px; font-weight:800; color:var(--ink-soft); padding-bottom:3px; }
   .cal-grid .day{ font-size:10px; font-weight:700; color:var(--ink); padding:5px 0; border-radius:7px; cursor:default; }
@@ -261,7 +264,7 @@
         <div class="after-school-label">To-Do</div>
         <div class="brain-dump">
           <input type="text" id="brainDumpInput" placeholder="Brain dump anything…">
-          <span class="ai-pill">✨ AI sort</span>
+          <span class="ai-pill" role="button" tabindex="0">✨ AI sort</span>
         </div>
         <div id="todoLists"></div>
       </div>
@@ -320,7 +323,9 @@
         <div class="total-badge">Total tahun ajaran: <b>212 hari efektif</b> · Sem 1: <b>111</b> · Sem 2: <b>101</b></div>
         <button class="import-btn" id="importEventsBtn" type="button">📥 Import Events JSON</button>
         <input type="file" id="importEventsFile" accept=".json,application/json" style="display:none;">
+        <button class="import-btn" id="calBackBtn" type="button" style="display:none; border-style:solid; color:#fff; background:var(--navy); border-color:var(--navy);">← Semua Bulan</button>
         <div id="calMonths"></div>
+        <div id="calMonthAgenda"></div>
       </div>
     </div>
 
@@ -856,6 +861,135 @@ function renderDailyRoutine(){
 
 /* ================= RENDER: TO-DO ================= */
 const TAG_COLORS = { focus:'--focus', personal:'--personal', wind:'--wind' };
+
+/* ================= BRAIN DUMP PARSER (offline, rule-based) =================
+ * Reads free-typed text and extracts: due date, priority, School tag/class.
+ * No network calls — everything below is hardcoded pattern matching. */
+const ID_WEEKDAYS = ['minggu','senin','selasa','rabu','kamis','jumat','sabtu']; // index = JS getDay()
+// Month lookup: covers Indonesian (full + short) AND English, since real chat
+// exports mix both — event flyers/posters are often typed in English even in
+// an otherwise Indonesian conversation (e.g. "25 July 2026").
+const MONTH_LOOKUP = {
+  januari:0, january:0, jan:0,
+  februari:1, february:1, feb:1,
+  maret:2, march:2, mar:2,
+  april:3, apr:3,
+  mei:4, may:4,
+  juni:5, june:5, jun:5,
+  juli:6, july:6, jul:6,
+  agustus:7, august:7, agu:7, ags:7, aug:7,
+  september:8, sep:8, sept:8,
+  oktober:9, october:9, okt:9, oct:9,
+  november:10, nov:10,
+  desember:11, december:11, des:11, dec:11,
+};
+const MONTH_ALT = Object.keys(MONTH_LOOKUP).sort((a,b)=>b.length-a.length).join('|');
+
+function addDays(d, n){ const r = new Date(d); r.setDate(r.getDate()+n); return r; }
+function nextWeekdayOccurrence(from, targetDow){
+  // Nearest upcoming occurrence of targetDow; if today IS that weekday, jump a full week
+  // (both for "Senin depan" said on a Monday, and for a lone "Senin" mention — same math,
+  // the caller decides whether to flag it as a guess or trust it as explicit).
+  let diff = (targetDow - from.getDay() + 7) % 7;
+  if(diff === 0) diff = 7;
+  return addDays(from, diff);
+}
+
+function parseBrainDump(raw){
+  let text = raw.trim();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  function strip(re){
+    const m = text.match(re);
+    if(m) text = (text.slice(0,m.index) + text.slice(m.index+m[0].length)).replace(/\s{2,}/g,' ').trim();
+    return m;
+  }
+
+  // ---- 1. Priority words ----
+  // Note: "asap" is deliberately excluded from the case-insensitive list — in
+  // real Indonesian chat exports it's overwhelmingly the word for "smoked"
+  // (ikan asap = smoked fish), not the English acronym. Only a literal
+  // ALL-CAPS "ASAP" counts as the acronym.
+  let priority = null;
+  const priorityRe = /\b(penting|urgent|segera|mendesak|wajib|deadline|batas waktu|paling lambat)\b/i;
+  while(strip(priorityRe)) priority = 'high'; // messages sometimes stack 2+ (e.g. "wajib ... paling lambat")
+  if(strip(/\bASAP\b/)) priority = 'high';
+
+  // ---- 2. Due date (checked most-specific first) ----
+  let dueDate = null, dateFlag = false, m;
+
+  const weekdayDepanRe = new RegExp('\\b(' + ID_WEEKDAYS.join('|') + ')\\s+depan\\b', 'i');
+  if(m = text.match(weekdayDepanRe)){
+    dueDate = nextWeekdayOccurrence(today, ID_WEEKDAYS.indexOf(m[1].toLowerCase()));
+    strip(weekdayDepanRe);
+  } else if(m = text.match(/\bminggu depan\b/i)){
+    dueDate = addDays(today, 7);
+    strip(/\bminggu depan\b/i);
+  } else if(strip(/\blusa\b/i)){
+    dueDate = addDays(today, 2);
+  } else if(strip(/\bbesok\b/i)){
+    dueDate = addDays(today, 1);
+  } else if(strip(/\bhari ini\b/i)){
+    dueDate = new Date(today);
+  } else {
+    // Explicit "DD Month [YYYY]" — Month can be Indonesian or English
+    const explicitRe = new RegExp('\\b(\\d{1,2})\\s+(' + MONTH_ALT + ')\\.?\\s*(\\d{4})?\\b', 'i');
+    if(m = text.match(explicitRe)){
+      const day = parseInt(m[1],10);
+      const monIdx = MONTH_LOOKUP[m[2].toLowerCase()];
+      if(day>=1 && day<=31 && monIdx!==undefined){
+        const year = m[3] ? parseInt(m[3],10) : today.getFullYear();
+        const d = new Date(year, monIdx, day);
+        dueDate = d;
+        // No year typed and the date's already passed this year — could mean next
+        // year, could be a typo. Don't guess silently; flag it for a quick check.
+        if(!m[3] && d < today) dateFlag = true;
+        strip(explicitRe);
+      }
+    } else {
+      // Numeric "DD/MM" or "DD-MM" [/YYYY]
+      const numRe = /\b(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?\b/;
+      if(m = text.match(numRe)){
+        const day = parseInt(m[1],10), mon = parseInt(m[2],10)-1;
+        if(day>=1 && day<=31 && mon>=0 && mon<=11){
+          const year = m[3] ? (m[3].length===2 ? 2000+parseInt(m[3],10) : parseInt(m[3],10)) : today.getFullYear();
+          const d = new Date(year, mon, day);
+          dueDate = d;
+          if(!m[3] && d < today) dateFlag = true;
+          strip(numRe);
+        }
+      } else {
+        // Lone weekday name — ambiguous (no "depan"/"ini" to anchor it), so flag it
+        const loneRe = new RegExp('\\b(' + ID_WEEKDAYS.join('|') + ')\\b', 'i');
+        if(m = text.match(loneRe)){
+          dueDate = nextWeekdayOccurrence(today, ID_WEEKDAYS.indexOf(m[1].toLowerCase()));
+          dateFlag = true;
+          strip(loneRe);
+        }
+      }
+    }
+  }
+  if(!dueDate) dueDate = new Date(today); // nothing mentioned → defaults to today, silently
+
+  // ---- 3. School tag / class code ----
+  let tag = 'Admin', tagColor = 'personal', classCode = null;
+  if(m = text.match(/\b([1-6])\s?([ABCDabcd])\b/)){
+    classCode = m[1] + m[2].toUpperCase();
+    tag = 'School'; tagColor = 'focus';
+  } else if(/\b(rapor|sumatif|ulangan|ujian|mengajar|kelas|piket|gukar|ekskul|ekstrakurikuler|kokurikuler|wali kelas|upacara|pramuka)\b/i.test(text)){
+    tag = 'School'; tagColor = 'focus';
+  }
+
+  const title = text.replace(/\s{2,}/g,' ').trim()
+    .replace(/\s+\b(untuk|pada|di|ke)\s*$/i, '')
+    .replace(/^[,.\-–]+|[,.\-–]+$/g, '').trim() || '(Tanpa judul)';
+  const metaBits = [];
+  if(priority) metaBits.push('⚡ Prioritas');
+  if(classCode) metaBits.push('Kelas ' + classCode);
+
+  return { title, dueDate: fmt(dueDate), dateFlag, meta: metaBits.join(' · '), tag, tagColor };
+}
+
 function renderTodos(){
   const wrap = document.getElementById('todoLists');
   const todayStr = fmt(new Date());
@@ -870,10 +1004,11 @@ function renderTodos(){
     if(items.length === 0) return '';
     return `<div class="todo-section-label ${cls}"><span class="dot"></span> ${label}</div>` + items.map(t=>{
       const dueLabel = t.dueDate === todayStr ? 'Due today' : t.dueDate === tomorrowStr ? 'Tomorrow' : t.dueDate ? t.dueDate : 'This week';
+      const flagBadge = t.dateFlag ? ' <span style="color:var(--personal);font-weight:800;">· cek tanggal</span>' : '';
       const colorVar = TAG_COLORS[t.tagColor] || '--focus';
       return `<div class="todo-item" data-id="${t.id}">
         <div class="todo-check ${t.done?'checked':''}" role="checkbox" aria-checked="${t.done}" aria-label="${t.title.replace(/"/g,'&quot;')}" tabindex="0">${t.done?'✓':''}</div>
-        <div class="todo-text"><div class="todo-title ${t.done?'checked':''}">${t.title}</div><div class="todo-meta">${dueLabel}${t.meta?' · '+t.meta:''}</div></div>
+        <div class="todo-text"><div class="todo-title ${t.done?'checked':''}">${t.title}</div><div class="todo-meta">${dueLabel}${t.meta?' · '+t.meta:''}${flagBadge}</div></div>
         <div class="todo-tag" style="background:var(${colorVar}-bg); color:var(${colorVar});">${t.tag}</div>
       </div>`;
     }).join('');
@@ -895,13 +1030,32 @@ function renderTodos(){
     });
   });
 }
+function submitBrainDump(){
+  const input = document.getElementById('brainDumpInput');
+  const raw = input.value.trim();
+  if(!raw) return;
+  const parsed = parseBrainDump(raw);
+  todoState.push({
+    id: 't'+Date.now(),
+    title: parsed.title,
+    meta: parsed.meta,
+    tag: parsed.tag,
+    tagColor: parsed.tagColor,
+    done: false,
+    dueDate: parsed.dueDate,
+    dateFlag: parsed.dateFlag
+  });
+  saveState('petra_todos_v1', todoState);
+  input.value = '';
+  renderTodos();
+  showToast(parsed.dateFlag ? '✨ Ditambahkan — tanggal perlu dicek' : '✨ Ditambahkan ke To-Do');
+}
 document.getElementById('brainDumpInput').addEventListener('keydown', (e)=>{
-  if(e.key === 'Enter' && e.target.value.trim()){
-    todoState.push({id:'t'+Date.now(), title:e.target.value.trim(), meta:'', tag:'Admin', tagColor:'personal', done:false, dueDate: fmt(new Date())});
-    saveState('petra_todos_v1', todoState);
-    e.target.value = '';
-    renderTodos();
-  }
+  if(e.key === 'Enter') submitBrainDump();
+});
+document.querySelector('.brain-dump .ai-pill').addEventListener('click', submitBrainDump);
+document.querySelector('.brain-dump .ai-pill').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); submitBrainDump(); }
 });
 
 /* ================= RENDER: CALENDAR ================= */
@@ -929,7 +1083,7 @@ function buildMonthCard(year, monthIndex, heCount){
   const total = startWeekday + daysInMonth;
   const trailing = (7-(total%7))%7;
   for(let i=1;i<=trailing;i++){ cells += `<div class="day muted">${i}</div>`; }
-  return `<div class="cal-card">
+  return `<div class="cal-card" data-y="${year}" data-m="${monthIndex}">
     <div class="cal-title">${monthNamesID[monthIndex]} ${year} <span class="days-left">${heCount} hari efektif</span></div>
     <div class="cal-grid">
       <div class="dow">M</div><div class="dow">S</div><div class="dow">S</div><div class="dow">R</div><div class="dow">K</div><div class="dow">J</div><div class="dow">S</div>
@@ -937,19 +1091,83 @@ function buildMonthCard(year, monthIndex, heCount){
     </div>
   </div>`;
 }
+let calFocusedMonth = null; // {y, m} or null — set when a month card is tapped
+let calFocusedSem = 1;
+
+function buildMonthAgenda(year, monthIndex){
+  const items = [];
+  for(const dateStr in customEvents){
+    const d = new Date(dateStr+'T00:00:00');
+    if(d.getFullYear() === year && d.getMonth() === monthIndex){
+      customEvents[dateStr].forEach(ev => items.push({dateStr, ...ev}));
+    }
+  }
+  if(items.length === 0){
+    return `<div class="wa-empty-note" style="text-align:center; padding:24px 10px; color:var(--ink-soft); font-size:12px; font-weight:600;">Tidak ada kegiatan tercatat bulan ini.</div>`;
+  }
+  items.sort((a,b)=> a.dateStr===b.dateStr ? (a.time||'').localeCompare(b.time||'') : a.dateStr.localeCompare(b.dateStr));
+  const idDays=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  let html = ''; let lastDate = null;
+  items.forEach(ev=>{
+    if(ev.dateStr !== lastDate){
+      const d = new Date(ev.dateStr+'T00:00:00');
+      html += `<div class="agenda-date-label">${idDays[d.getDay()]}, ${d.getDate()} ${monthNamesID[d.getMonth()]}</div>`;
+      lastDate = ev.dateStr;
+    }
+    const timeLabel = ev.endTime ? `${ev.time}–${ev.endTime}` : ev.time;
+    html += `<div class="simple-card" style="margin-bottom:8px;">
+      <div class="icon-badge" style="background:var(--wind-bg);">🗓️</div>
+      <div><div class="s-title">${ev.title}</div><div class="s-time">${timeLabel}${ev.pic ? ' · PIC: '+ev.pic : ''}${ev.location ? ' · 📍'+ev.location : ''}</div></div>
+    </div>`;
+  });
+  return html;
+}
+
 function renderSemester(sem){
+  calFocusedSem = sem;
   const list = sem===1 ? sem1Months : sem2Months;
   const wrap = document.getElementById('calMonths');
-  wrap.innerHTML = list.map(x=>buildMonthCard(x.y,x.m,x.he)).join('') + document.getElementById('calLegendTemplate').outerHTML.replace('display:none;','');
+  const agendaWrap = document.getElementById('calMonthAgenda');
+  const backBtn = document.getElementById('calBackBtn');
+
+  const focusedEntry = calFocusedMonth ? list.find(x=> x.y===calFocusedMonth.y && x.m===calFocusedMonth.m) : null;
+
+  if(focusedEntry){
+    wrap.innerHTML = buildMonthCard(focusedEntry.y, focusedEntry.m, focusedEntry.he) + document.getElementById('calLegendTemplate').outerHTML.replace('display:none;','');
+    backBtn.style.display = 'block';
+    agendaWrap.innerHTML = `<div class="after-school-label">Kegiatan Bulan Ini</div>` + buildMonthAgenda(focusedEntry.y, focusedEntry.m);
+  } else {
+    wrap.innerHTML = list.map(x=>buildMonthCard(x.y,x.m,x.he)).join('') + document.getElementById('calLegendTemplate').outerHTML.replace('display:none;','');
+    backBtn.style.display = 'none';
+    agendaWrap.innerHTML = '';
+  }
+
   wrap.querySelectorAll('.day[data-date]').forEach(el=>{
-    el.addEventListener('click', ()=>{
+    el.addEventListener('click', (e)=>{
+      e.stopPropagation();
       const dateStr = el.dataset.date;
       const dayEvents = customEvents[dateStr] || [];
-      if(dayEvents.length > 0){ openDayEventsSheet(dateStr, dayEvents); }
+      // Any real holiday/event day opens the sheet (consistent, hard to miss) —
+      // even with zero linked customEvents, openDayEventsSheet still shows the
+      // holiday label on its own. Toast is now only a light fallback for days
+      // with a title but no holidayMap entry (e.g. "Hari ini", "Minggu").
+      if(dayEvents.length > 0 || holidayMap[dateStr]){ openDayEventsSheet(dateStr, dayEvents); }
       else if(el.dataset.title){ showToast(el.dataset.title); }
     });
   });
+
+  wrap.querySelectorAll('.cal-card').forEach(card=>{
+    card.addEventListener('click', (e)=>{
+      if(e.target.closest('.day')) return;
+      calFocusedMonth = { y: Number(card.dataset.y), m: Number(card.dataset.m) };
+      renderSemester(sem);
+    });
+  });
 }
+document.getElementById('calBackBtn').addEventListener('click', ()=>{
+  calFocusedMonth = null;
+  renderSemester(calFocusedSem);
+});
 
 function openDayEventsSheet(dateStr, dayEvents){
   const d = new Date(dateStr+'T00:00:00');
@@ -1040,7 +1258,7 @@ function renderWidgetCal(){
   const heEntry = [...sem1Months,...sem2Months].find(x=>x.y===y && x.m===m);
   document.getElementById('widgetCal').innerHTML = `
     <div class="wc-head"><span class="wc-month">${monthNamesID[m]}</span><span class="wc-today">${now.getDate()}</span></div>
-    ${buildMonthCard(y,m, heEntry?heEntry.he:'–').replace(/<div class="cal-title">.*?<\/div>/,'').replace('<div class="cal-card">','').replace(/<\/div>\s*$/,'')}
+    ${buildMonthCard(y,m, heEntry?heEntry.he:'–').replace(/<div class="cal-title">.*?<\/div>/,'').replace(/<div class="cal-card"[^>]*>/,'').replace(/<\/div>\s*$/,'')}
   `;
 }
 

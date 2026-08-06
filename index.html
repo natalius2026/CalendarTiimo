@@ -87,6 +87,10 @@
   .period-edit-icon{ color:#C9C2DA; font-size:14px; flex-shrink:0; }
 
   .after-school-label{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; color:var(--ink); margin:18px 0 8px; }
+  .section-header-row{ display:flex; align-items:center; justify-content:space-between; margin:18px 0 8px; }
+  .section-header-row .after-school-label{ margin:0; }
+  .clear-done-btn{ border:none; background:transparent; color:var(--ink-soft); font-family:'Nunito',sans-serif; font-weight:700; font-size:11px; cursor:pointer; padding:4px 2px; }
+  .clear-done-btn:active{ opacity:.6; }
   .simple-card{ display:flex; align-items:center; gap:11px; background:var(--card); border-radius:14px; padding:10px 13px; margin-bottom:7px; box-shadow:0 2px 8px rgba(46,42,69,.05); }
   .simple-card .icon-badge{ width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
   .simple-card .s-title{ font-weight:700; font-size:12.5px; color:var(--ink); }
@@ -106,9 +110,9 @@
   .todo-title.checked{ text-decoration:line-through; color:var(--ink-soft); }
   .todo-meta{ font-size:11.5px; color:var(--ink-soft); font-weight:600; margin-top:1px; }
   .todo-tag{ font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:8px; flex-shrink:0; }
-  .brain-dump{ margin:14px 0 4px; background:linear-gradient(135deg,#F1E7FA,#E4EFFB); border-radius:16px; padding:13px 15px; display:flex; align-items:center; gap:10px; }
-  .brain-dump input{ flex:1; border:none; background:transparent; outline:none; font-family:'Nunito',sans-serif; font-weight:700; font-size:13px; color:var(--ink); }
-  .brain-dump input::placeholder{ color:#8B84A8; font-weight:600; }
+  .brain-dump{ margin:14px 0 4px; background:linear-gradient(135deg,#F1E7FA,#E4EFFB); border-radius:16px; padding:13px 15px; display:flex; align-items:flex-end; gap:10px; }
+  .brain-dump textarea{ flex:1; border:none; background:transparent; outline:none; font-family:'Nunito',sans-serif; font-weight:700; font-size:13px; color:var(--ink); resize:none; max-height:140px; overflow-y:auto; line-height:1.4; padding:2px 0; }
+  .brain-dump textarea::placeholder{ color:#8B84A8; font-weight:600; }
   .brain-dump .ai-pill{ font-size:9.5px; font-weight:800; color:#fff; background:var(--ink); padding:5px 8px; border-radius:10px; white-space:nowrap; cursor:pointer; user-select:none; transition:opacity .15s ease; }
   .brain-dump .ai-pill:active{ opacity:.7; }
 
@@ -261,9 +265,12 @@
           <div><div class="s-title">Reading — Patristic sources</div><div class="s-time">7:00 – 8:00 PM</div></div>
         </div>
 
-        <div class="after-school-label">To-Do</div>
+        <div class="section-header-row">
+          <div class="after-school-label">To-Do</div>
+          <button class="clear-done-btn" id="clearDoneBtn" type="button">🧹 Hapus selesai</button>
+        </div>
         <div class="brain-dump">
-          <input type="text" id="brainDumpInput" placeholder="Brain dump anything…">
+          <textarea id="brainDumpInput" rows="1" placeholder="Brain dump anything, or paste a chat…"></textarea>
           <span class="ai-pill" role="button" tabindex="0">✨ AI sort</span>
         </div>
         <div id="todoLists"></div>
@@ -895,14 +902,16 @@ function nextWeekdayOccurrence(from, targetDow){
   return addDays(from, diff);
 }
 
-function parseBrainDump(raw){
+function parseBrainDump(raw, refDate){
   let text = raw.trim();
-  const today = new Date(); today.setHours(0,0,0,0);
+  const today = refDate ? new Date(refDate) : new Date();
+  today.setHours(0,0,0,0);
+  let m;
 
   function strip(re){
-    const m = text.match(re);
-    if(m) text = (text.slice(0,m.index) + text.slice(m.index+m[0].length)).replace(/\s{2,}/g,' ').trim();
-    return m;
+    const mm = text.match(re);
+    if(mm) text = (text.slice(0,mm.index) + text.slice(mm.index+mm[0].length)).replace(/\s{2,}/g,' ').trim();
+    return mm;
   }
 
   // ---- 1. Priority words ----
@@ -915,22 +924,37 @@ function parseBrainDump(raw){
   while(strip(priorityRe)) priority = 'high'; // messages sometimes stack 2+ (e.g. "wajib ... paling lambat")
   if(strip(/\bASAP\b/)) priority = 'high';
 
-  // ---- 2. Due date (checked most-specific first) ----
-  let dueDate = null, dateFlag = false, m;
+  // ---- 2. Location (best-effort) ----
+  // Only the unambiguous 📍 marker (from flyer/poster-style messages) is used.
+  // A "di <Place>" fallback was tried and dropped — real chat text is full of
+  // abbreviations like "R.Media lt.1" where a period is part of the location,
+  // not a sentence boundary, and the fallback kept truncating mid-phrase and
+  // corrupting titles with leftover fragments. Not worth the false positives.
+  let location = null;
+  const pinRe = /📍\s*([^\n,.;]{2,40})/;
+  if(m = text.match(pinRe)){
+    location = m[1].trim();
+    strip(pinRe);
+  }
+
+  // ---- 3. Due date (checked most-specific first) ----
+  let dueDate = null, dateFlag = false, hasDateSignal = false;
 
   const weekdayDepanRe = new RegExp('\\b(' + ID_WEEKDAYS.join('|') + ')\\s+depan\\b', 'i');
   if(m = text.match(weekdayDepanRe)){
     dueDate = nextWeekdayOccurrence(today, ID_WEEKDAYS.indexOf(m[1].toLowerCase()));
+    hasDateSignal = true;
     strip(weekdayDepanRe);
   } else if(m = text.match(/\bminggu depan\b/i)){
     dueDate = addDays(today, 7);
+    hasDateSignal = true;
     strip(/\bminggu depan\b/i);
-  } else if(strip(/\blusa\b/i)){
-    dueDate = addDays(today, 2);
-  } else if(strip(/\bbesok\b/i)){
-    dueDate = addDays(today, 1);
-  } else if(strip(/\bhari ini\b/i)){
-    dueDate = new Date(today);
+  } else if(text.match(/\blusa\b/i)){
+    dueDate = addDays(today, 2); hasDateSignal = true; strip(/\blusa\b/i);
+  } else if(text.match(/\bbesok\b/i)){
+    dueDate = addDays(today, 1); hasDateSignal = true; strip(/\bbesok\b/i);
+  } else if(text.match(/\bhari ini\b/i)){
+    dueDate = new Date(today); hasDateSignal = true; strip(/\bhari ini\b/i);
   } else {
     // Explicit "DD Month [YYYY]" — Month can be Indonesian or English
     const explicitRe = new RegExp('\\b(\\d{1,2})\\s+(' + MONTH_ALT + ')\\.?\\s*(\\d{4})?\\b', 'i');
@@ -941,6 +965,7 @@ function parseBrainDump(raw){
         const year = m[3] ? parseInt(m[3],10) : today.getFullYear();
         const d = new Date(year, monIdx, day);
         dueDate = d;
+        hasDateSignal = true;
         // No year typed and the date's already passed this year — could mean next
         // year, could be a typo. Don't guess silently; flag it for a quick check.
         if(!m[3] && d < today) dateFlag = true;
@@ -955,6 +980,7 @@ function parseBrainDump(raw){
           const year = m[3] ? (m[3].length===2 ? 2000+parseInt(m[3],10) : parseInt(m[3],10)) : today.getFullYear();
           const d = new Date(year, mon, day);
           dueDate = d;
+          hasDateSignal = true;
           if(!m[3] && d < today) dateFlag = true;
           strip(numRe);
         }
@@ -964,14 +990,15 @@ function parseBrainDump(raw){
         if(m = text.match(loneRe)){
           dueDate = nextWeekdayOccurrence(today, ID_WEEKDAYS.indexOf(m[1].toLowerCase()));
           dateFlag = true;
+          hasDateSignal = true;
           strip(loneRe);
         }
       }
     }
   }
-  if(!dueDate) dueDate = new Date(today); // nothing mentioned → defaults to today, silently
+  if(!dueDate) dueDate = new Date(today); // nothing mentioned → defaults to reference date, silently
 
-  // ---- 3. School tag / class code ----
+  // ---- 4. School tag / class code ----
   let tag = 'Admin', tagColor = 'personal', classCode = null;
   if(m = text.match(/\b([1-6])\s?([ABCDabcd])\b/)){
     classCode = m[1] + m[2].toUpperCase();
@@ -980,14 +1007,77 @@ function parseBrainDump(raw){
     tag = 'School'; tagColor = 'focus';
   }
 
-  const title = text.replace(/\s{2,}/g,' ').trim()
+  let title = text.split('\n')[0] // chat messages are often multi-line; keep just the opening line
+    .replace(/\s{2,}/g,' ').trim()
+    .replace(/^https?:\/\/\S+\s*/,'') // a leading bare link adds no value as a title
     .replace(/\s+\b(untuk|pada|di|ke)\s*$/i, '')
-    .replace(/^[,.\-–]+|[,.\-–]+$/g, '').trim() || '(Tanpa judul)';
+    .replace(/\(\s*[,.\-–]*\s*\)/g, '') // empty "( , )" left behind after a date inside parens got stripped
+    .replace(/\s+([,.;])/g, '$1') // "hari , ada" -> "hari, ada" — space left behind after a stripped word
+    .replace(/^[,.\-–]+|[,.\-–]+$/g, '').trim();
+  if(title.length > 90) title = title.slice(0,87).trim() + '…';
+  title = title || '(Tanpa judul)';
   const metaBits = [];
   if(priority) metaBits.push('⚡ Prioritas');
   if(classCode) metaBits.push('Kelas ' + classCode);
+  if(location) metaBits.push('📍 ' + location);
 
-  return { title, dueDate: fmt(dueDate), dateFlag, meta: metaBits.join(' · '), tag, tagColor };
+  return { title, dueDate: fmt(dueDate), dateFlag, hasDateSignal, meta: metaBits.join(' · '), tag, tagColor, location, priority };
+}
+
+/* ================= CHAT-PASTE DETECTION (offline) =================
+ * When the brain-dump box gets a multi-message chat paste instead of a
+ * single typed task, split it into individual messages first, then run
+ * each message's text through parseBrainDump() — using that MESSAGE's own
+ * timestamp as the reference date, since "besok" in a message sent weeks
+ * ago means the day after it was sent, not the day after you paste it in. */
+
+// WhatsApp export line: "[DD/MM/YY HH.MM.SS] Sender: text" (Android) or
+// "DD/MM/YY, HH:MM - Sender: text" (iOS). Leading U+200E/U+200F marks stripped.
+const WA_MSG_RE = /^\[?(\d{1,2})\/(\d{1,2})\/(\d{2,4}),?\s+(\d{1,2})[.:](\d{2})(?:[.:](\d{2}))?(?:\s?[AaPp][Mm])?\]?\s*-?\s*([^:\n]{1,60}):\s?(.*)$/;
+// Plain "Name: message" paste (Slack/Telegram/etc, no WA timestamp brackets)
+const NAME_COLON_RE = /^([A-Za-z][\w .'\-]{1,30}):\s+(.+)$/;
+// WA system-generated lines that are never actionable — skip these outright
+const WA_SYSTEM_RE = /^(‎?Pesan (dan telepon )?(ini )?(dihapus|terenkripsi)|‎?(gambar|video|audio|GIF|stiker) tidak disertakan|‎?.+(ditambahkan|dikeluarkan|keluar)$|‎?Kode keamanan .+ telah berubah|‎?.+ mengubah (foto|subjek) grup)/i;
+
+function detectChatBlock(raw){
+  const lines = raw.replace(/[\u200e\u200f\r]/g,'').split('\n');
+  if(lines.length < 2) return false;
+  let waHits = 0, nameHits = 0;
+  for(const line of lines){
+    if(WA_MSG_RE.test(line)) waHits++;
+    else if(NAME_COLON_RE.test(line)) nameHits++;
+  }
+  if(waHits >= 2) return true;               // WA export timestamps are unambiguous
+  if(nameHits >= 2 && lines.length >= 3) return true; // generic "Name: msg" paste, conservative
+  return false;
+}
+
+function parseChatBlock(raw){
+  const lines = raw.replace(/[\u200e\u200f\r]/g,'').split('\n');
+  const messages = [];
+  let current = null;
+
+  for(const rawLine of lines){
+    const line = rawLine.trim();
+    let m;
+    if(m = line.match(WA_MSG_RE)){
+      if(current) messages.push(current);
+      const day=+m[1], mon=+m[2]-1, yr = m[3].length===2 ? 2000+ +m[3] : +m[3];
+      const hh=+m[4], mi=+m[5];
+      current = { sender: m[7].trim(), date: new Date(yr,mon,day,hh,mi), text: m[8] || '' };
+    } else if(m = line.match(NAME_COLON_RE)){
+      if(current) messages.push(current);
+      current = { sender: m[1].trim(), date: null, text: m[2] || '' };
+    } else if(current){
+      current.text += (current.text ? '\n' : '') + line; // continuation of a multi-line message
+    }
+  }
+  if(current) messages.push(current);
+
+  return messages.filter(msg => {
+    const t = msg.text.trim();
+    return t.length > 0 && !WA_SYSTEM_RE.test(t) && !/^https?:\/\/\S+$/.test(t); // drop empties, system lines, bare links
+  });
 }
 
 function renderTodos(){
@@ -1005,10 +1095,12 @@ function renderTodos(){
     return `<div class="todo-section-label ${cls}"><span class="dot"></span> ${label}</div>` + items.map(t=>{
       const dueLabel = t.dueDate === todayStr ? 'Due today' : t.dueDate === tomorrowStr ? 'Tomorrow' : t.dueDate ? t.dueDate : 'This week';
       const flagBadge = t.dateFlag ? ' <span style="color:var(--personal);font-weight:800;">· cek tanggal</span>' : '';
+      const senderBit = t.sender ? `Dari ${t.sender}` : '';
+      const metaParts = [t.meta, senderBit].filter(Boolean).join(' · ');
       const colorVar = TAG_COLORS[t.tagColor] || '--focus';
       return `<div class="todo-item" data-id="${t.id}">
         <div class="todo-check ${t.done?'checked':''}" role="checkbox" aria-checked="${t.done}" aria-label="${t.title.replace(/"/g,'&quot;')}" tabindex="0">${t.done?'✓':''}</div>
-        <div class="todo-text"><div class="todo-title ${t.done?'checked':''}">${t.title}</div><div class="todo-meta">${dueLabel}${t.meta?' · '+t.meta:''}${flagBadge}</div></div>
+        <div class="todo-text"><div class="todo-title ${t.done?'checked':''}">${t.title}</div><div class="todo-meta">${dueLabel}${metaParts?' · '+metaParts:''}${flagBadge}</div></div>
         <div class="todo-tag" style="background:var(${colorVar}-bg); color:var(${colorVar});">${t.tag}</div>
       </div>`;
     }).join('');
@@ -1034,29 +1126,87 @@ function submitBrainDump(){
   const input = document.getElementById('brainDumpInput');
   const raw = input.value.trim();
   if(!raw) return;
-  const parsed = parseBrainDump(raw);
-  todoState.push({
-    id: 't'+Date.now(),
-    title: parsed.title,
-    meta: parsed.meta,
-    tag: parsed.tag,
-    tagColor: parsed.tagColor,
-    done: false,
-    dueDate: parsed.dueDate,
-    dateFlag: parsed.dateFlag
-  });
+
+  let added = 0, skipped = 0, flaggedAny = false;
+
+  if(detectChatBlock(raw)){
+    // Pasted chat: split into messages, keep only the actionable ones (has a
+    // date, priority word, School keyword, or location), attribute each to
+    // its sender, and resolve relative dates against THAT message's own
+    // timestamp rather than "today" (a "besok" from three weeks ago means
+    // the day after it was sent, not the day after you paste it in).
+    const messages = parseChatBlock(raw);
+    messages.forEach(msg=>{
+      const parsed = parseBrainDump(msg.text, msg.date);
+      const actionable = parsed.hasDateSignal || parsed.priority || parsed.tag === 'School' || parsed.location;
+      if(!actionable){ skipped++; return; }
+      todoState.push({
+        id: 't'+Date.now()+Math.random().toString(36).slice(2,6),
+        title: parsed.title,
+        meta: parsed.meta,
+        sender: msg.sender || null,
+        tag: parsed.tag,
+        tagColor: parsed.tagColor,
+        done: false,
+        dueDate: parsed.dueDate,
+        dateFlag: parsed.dateFlag
+      });
+      added++;
+      if(parsed.dateFlag) flaggedAny = true;
+    });
+    if(added === 0){
+      showToast('Tidak ada tugas yang terdeteksi dari chat ini');
+      return;
+    }
+  } else {
+    const parsed = parseBrainDump(raw);
+    todoState.push({
+      id: 't'+Date.now(),
+      title: parsed.title,
+      meta: parsed.meta,
+      sender: null,
+      tag: parsed.tag,
+      tagColor: parsed.tagColor,
+      done: false,
+      dueDate: parsed.dueDate,
+      dateFlag: parsed.dateFlag
+    });
+    added = 1;
+    flaggedAny = parsed.dateFlag;
+  }
+
   saveState('petra_todos_v1', todoState);
   input.value = '';
+  input.style.height = 'auto';
   renderTodos();
-  showToast(parsed.dateFlag ? '✨ Ditambahkan — tanggal perlu dicek' : '✨ Ditambahkan ke To-Do');
+  if(added > 1){
+    showToast(`✨ ${added} tugas ditambahkan dari chat${skipped ? ' · '+skipped+' dilewati' : ''}${flaggedAny ? ' · ada tanggal perlu dicek' : ''}`);
+  } else {
+    showToast(flaggedAny ? '✨ Ditambahkan — tanggal perlu dicek' : '✨ Ditambahkan ke To-Do');
+  }
 }
 document.getElementById('brainDumpInput').addEventListener('keydown', (e)=>{
-  if(e.key === 'Enter') submitBrainDump();
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); submitBrainDump(); }
+});
+document.getElementById('brainDumpInput').addEventListener('input', (e)=>{
+  e.target.style.height = 'auto';
+  e.target.style.height = Math.min(e.target.scrollHeight, 140) + 'px';
 });
 document.querySelector('.brain-dump .ai-pill').addEventListener('click', submitBrainDump);
 document.querySelector('.brain-dump .ai-pill').addEventListener('keydown', (e)=>{
   if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); submitBrainDump(); }
 });
+
+function clearCompletedTodos(){
+  const before = todoState.length;
+  todoState = todoState.filter(t=>!t.done);
+  const removed = before - todoState.length;
+  if(removed === 0){ showToast('Tidak ada tugas selesai untuk dihapus'); return; }
+  saveState('petra_todos_v1', todoState);
+  renderTodos();
+  showToast(`🧹 ${removed} tugas selesai dihapus`);
+}
+document.getElementById('clearDoneBtn').addEventListener('click', clearCompletedTodos);
 
 /* ================= RENDER: CALENDAR ================= */
 function buildMonthCard(year, monthIndex, heCount){

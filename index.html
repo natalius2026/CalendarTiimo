@@ -26,33 +26,126 @@
     --school:#C99A3C; --school-bg:#F5EBD3;
     --navy:#233150;
     --now:#F25C54;
+    --body-bg:#EDE7F8;
+    --shadow-c:46,42,69;
+    --tabbar-bg:rgba(255,255,255,0.9);
+    --sheet-bg:#FFFFFF;
+    --accent-grad-1:#8B7FD1; --accent-grad-2:#6FA8DC;
+    --skin-name:'Petra Lavender';
+  }
+
+  /* ============ ALPHA-SKIN THEME PACK ============ */
+  /* Light skins */
+  [data-theme="whistler"]{
+    --ink:#1F3A5F; --ink-soft:#5B7590; --paper:#EAF2FC; --card:#FFFFFF; --line:#D3E3F5;
+    --navy:#0F4C8C; --school:#2E7D32; --school-bg:#E1F0E2; --focus:#1E88E5; --focus-bg:#DCEBFB;
+    --personal:#EF6C00; --personal-bg:#FCE4CC; --wind:#7E57C2; --wind-bg:#EBE3F7;
+    --morning:#43A047; --morning-bg:#E1F0E2; --now:#E53935; --body-bg:#D9E7F9;
+    --tabbar-bg:rgba(255,255,255,.92); --sheet-bg:#FFFFFF;
+    --accent-grad-1:#2E7BC4; --accent-grad-2:#59B6E8; --skin-name:'Whistler Blue';
+  }
+  [data-theme="silver"]{
+    --ink:#333333; --ink-soft:#767676; --paper:#F1F1F1; --card:#FFFFFF; --line:#DEDEDE;
+    --navy:#4A4A4A; --school:#8A6D3B; --school-bg:#EFE6D3; --focus:#5B7C99; --focus-bg:#E4EAEE;
+    --personal:#B5651D; --personal-bg:#F0DEC9; --wind:#7A6C8E; --wind-bg:#E9E4EE;
+    --morning:#5C8A5C; --morning-bg:#E3EDE3; --now:#C0392B; --body-bg:#E3E3E3;
+    --tabbar-bg:rgba(255,255,255,.92); --sheet-bg:#FFFFFF;
+    --accent-grad-1:#9A9A9A; --accent-grad-2:#C7C7C7; --skin-name:'Luna Silver';
+  }
+  [data-theme="terracotta"]{
+    --ink:#4A2E1E; --ink-soft:#8A6A54; --paper:#FBF1E6; --card:#FFFFFF; --line:#F0DCC5;
+    --navy:#8C4A2B; --school:#C77A2E; --school-bg:#F5E1C6; --focus:#B5652E; --focus-bg:#F2DFCC;
+    --personal:#D1495B; --personal-bg:#F7DADD; --wind:#A9754B; --wind-bg:#F0E2D2;
+    --morning:#7A8C4A; --morning-bg:#E9EFD8; --now:#C0392B; --body-bg:#F3DFC7;
+    --tabbar-bg:rgba(255,250,242,.92); --sheet-bg:#FFFCF6;
+    --accent-grad-1:#C77A2E; --accent-grad-2:#D1495B; --skin-name:'Terracotta Autumn';
+  }
+  [data-theme="emerald"]{
+    --ink:#153327; --ink-soft:#4F7A68; --paper:#EAF7F0; --card:#FFFFFF; --line:#D3EEE0;
+    --navy:#0F5C42; --school:#2F8F5B; --school-bg:#DBF0E2; --focus:#1F9E8B; --focus-bg:#D9F2EC;
+    --personal:#C97A2E; --personal-bg:#F5E1C6; --wind:#4E8F6E; --wind-bg:#DCEFE2;
+    --morning:#2F8F5B; --morning-bg:#DBF0E2; --now:#D14545; --body-bg:#D6EEE0;
+    --tabbar-bg:rgba(255,255,255,.92); --sheet-bg:#FFFFFF;
+    --accent-grad-1:#0F5C42; --accent-grad-2:#2FAE7E; --skin-name:'Emerald Isle';
+  }
+  [data-theme="royale"]{
+    --ink:#2A1F3D; --ink-soft:#6E5F8C; --paper:#F3EEFA; --card:#FFFFFF; --line:#E4D9F5;
+    --navy:#4B2E83; --school:#8A5FBF; --school-bg:#EAE0F7; --focus:#6B4EA6; --focus-bg:#EBE2F7;
+    --personal:#C0568A; --personal-bg:#F5DCE8; --wind:#8A5FBF; --wind-bg:#EAE0F7;
+    --morning:#5FA084; --morning-bg:#DFF0E7; --now:#D1455F; --body-bg:#E4D6F5;
+    --tabbar-bg:rgba(255,255,255,.92); --sheet-bg:#FFFFFF;
+    --accent-grad-1:#6B4EA6; --accent-grad-2:#8A5FBF; --skin-name:'Royale Amethyst';
+  }
+  /* Dark skins */
+  [data-theme="obsidian"]{
+    --ink:#EDEAF7; --ink-soft:#A79FC2; --paper:#191527; --card:#231D38; --line:#332A4E;
+    --navy:#6FA8DC; --school:#D9B25E; --school-bg:#3A3120; --focus:#6FA8DC; --focus-bg:#20304A;
+    --personal:#F2966B; --personal-bg:#3E2C22; --wind:#C7A6E8; --wind-bg:#332748;
+    --morning:#8FBFA0; --morning-bg:#20362A; --now:#FF7A70; --body-bg:#0F0C1A;
+    --tabbar-bg:rgba(24,19,38,.86); --sheet-bg:#231D38;
+    --accent-grad-1:#6FA8DC; --accent-grad-2:#8B7FD1; --skin-name:'Obsidian Night';
+  }
+  [data-theme="carbon"]{
+    --ink:#E8E8EA; --ink-soft:#9A9AA3; --paper:#17181C; --card:#212227; --line:#33343A;
+    --navy:#5B93C9; --school:#C9A24A; --school-bg:#332C1C; --focus:#5B93C9; --focus-bg:#1C2A38;
+    --personal:#D97F52; --personal-bg:#332419; --wind:#9B8AC4; --wind-bg:#26223A;
+    --morning:#6FA37E; --morning-bg:#1C2E22; --now:#E0665C; --body-bg:#0C0D10;
+    --tabbar-bg:rgba(23,24,28,.88); --sheet-bg:#212227;
+    --accent-grad-1:#5B93C9; --accent-grad-2:#3D6E9B; --skin-name:'Carbon Graphite';
+  }
+  [data-theme="midnight"]{
+    --ink:#DDE6F5; --ink-soft:#8CA0C2; --paper:#0E1626; --card:#152136; --line:#233248;
+    --navy:#5C8FD6; --school:#D6B25A; --school-bg:#2E2A1C; --focus:#5C8FD6; --focus-bg:#1B2A44;
+    --personal:#E08A5C; --personal-bg:#332619; --wind:#8AA6E0; --wind-bg:#1E2A44;
+    --morning:#6FBF9A; --morning-bg:#173428; --now:#EF6F63; --body-bg:#070C16;
+    --tabbar-bg:rgba(14,22,38,.88); --sheet-bg:#152136;
+    --accent-grad-1:#5C8FD6; --accent-grad-2:#3A5F9E; --skin-name:'Midnight Navy';
+  }
+  [data-theme="royale-dark"]{
+    --ink:#F0E9FA; --ink-soft:#B3A2D6; --paper:#1B1430; --card:#251C3F; --line:#3A2E58;
+    --navy:#B08CE8; --school:#E0B563; --school-bg:#3A2E1C; --focus:#9B7DE0; --focus-bg:#2E2450;
+    --personal:#E88AAE; --personal-bg:#3A2130; --wind:#B08CE8; --wind-bg:#2E2450;
+    --morning:#7FCBA6; --morning-bg:#1A3428; --now:#FF7A93; --body-bg:#120B22;
+    --tabbar-bg:rgba(27,20,48,.88); --sheet-bg:#251C3F;
+    --accent-grad-1:#9B7DE0; --accent-grad-2:#B08CE8; --skin-name:'Royale Noir';
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-  html,body{margin:0; padding:0; height:100%; overscroll-behavior-y:none;}
+  html,body{margin:0; padding:0; height:100%; overflow:hidden; overscroll-behavior-y:none;}
   input,textarea{ user-select:text; }
   /* Only chrome/controls block text selection; readable content (schedules, names, todos) stays copyable */
   button, .switcher, .tab, .tabbar, .day-tabs, .subnav, .sem-tabs, .fab, .todo-check,
   .ambient-chip, .cal-grid .day, .streak{ user-select:none; }
   body{
-    background:#EDE7F8;
+    background:var(--body-bg);
     font-family:'Nunito', sans-serif;
-    min-height:100dvh;
+    height:100%;
+    transition:background .35s ease;
   }
+  /* #app is a fixed-height viewport shell: header + tabbar are true flex
+     children (not absolutely faked), and only .body-scroll scrolls inside it.
+     This is what keeps the tabbar permanently "anchored" without needing
+     to hunt for it via scrolling. */
   #app{
     max-width:480px; margin:0 auto;
-    min-height:100dvh;
+    height:100dvh; height:100vh;
     background:var(--paper);
     display:flex; flex-direction:column;
     position:relative;
-    overflow-x:hidden;
-    box-shadow:0 0 60px rgba(46,42,69,0.12);
+    overflow:hidden;
+    box-shadow:0 0 60px rgba(var(--shadow-c),0.12);
+    transition:background .35s ease;
   }
 
   /* ---------- header ---------- */
-  .app-header{ padding:calc(16px + env(safe-area-inset-top)) 22px 12px; flex-shrink:0; }
-  .app-header .greeting{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:21px; color:var(--ink); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .app-header{ padding:calc(12px + env(safe-area-inset-top)) 22px 10px; flex-shrink:0; display:flex; align-items:flex-start; gap:10px; }
+  .app-header .header-text{ flex:1; min-width:0; }
+  .app-header .greeting{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:19px; color:var(--ink); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
   .app-header .streak{ font-size:11px; font-weight:700; background:linear-gradient(135deg,#FFD9A0,#F2966B); color:#fff; padding:3px 9px; border-radius:20px; }
-  .app-header .subdate{ font-size:13px; color:var(--ink-soft); margin-top:2px; font-weight:600; }
+  .app-header .subdate{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; font-weight:600; }
+  .theme-btn{ flex-shrink:0; width:38px; height:38px; border-radius:50%; border:none; cursor:pointer;
+    background:linear-gradient(135deg,var(--accent-grad-1),var(--accent-grad-2)); color:#fff; font-size:16px;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(var(--shadow-c),.25); margin-top:1px; }
+  .theme-btn:active{ transform:scale(.92); }
 
   .install-banner{
     margin:0 22px 10px; background:linear-gradient(135deg,var(--focus-bg),var(--wind-bg));
@@ -61,7 +154,7 @@
   }
   .install-banner button{ margin-left:auto; border:none; background:transparent; color:var(--ink-soft); font-size:15px; cursor:pointer; padding:2px 4px;}
 
-  .body-scroll{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding-bottom:100px; }
+  .body-scroll{ flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; padding-bottom:100px; }
   .body-scroll::-webkit-scrollbar{ display:none; }
 
   .view{ display:none; }
@@ -70,25 +163,36 @@
 
   /* ---------- Today: day tabs + period rows ---------- */
   .section-pad{ padding:6px 22px 0; }
-  .day-tabs{ display:flex; gap:6px; overflow-x:auto; padding:2px 0 10px; }
+  .day-tabs{ display:flex; gap:6px; overflow-x:auto; padding:2px 0 8px; }
   .day-tabs::-webkit-scrollbar{ display:none; }
-  .day-tabs button{ flex:0 0 auto; padding:7px 15px; border:none; border-radius:12px; background:var(--card); color:var(--ink-soft); font-weight:800; font-size:12px; box-shadow:0 2px 8px rgba(46,42,69,.05); cursor:pointer; }
+  .day-tabs button{ flex:0 0 auto; padding:6px 13px; border:none; border-radius:11px; background:var(--card); color:var(--ink-soft); font-weight:800; font-size:11.5px; box-shadow:0 2px 8px rgba(var(--shadow-c),.05); cursor:pointer; }
   .day-tabs button.active{ background:var(--navy); color:#fff; }
 
-  .period-row{ display:flex; align-items:center; gap:11px; background:var(--card); border-radius:14px; padding:10px 13px; margin-bottom:7px; box-shadow:0 2px 8px rgba(46,42,69,.05); cursor:pointer; }
-  .period-row.recess{ background:#F3F0FA; box-shadow:none; }
-  .period-row.active-now{ background:var(--school-bg); box-shadow:0 0 0 2px var(--school) inset; }
-  .period-time{ width:78px; flex-shrink:0; font-size:11px; font-weight:800; color:var(--ink-soft); line-height:1.3; }
-  .period-label{ width:32px; flex-shrink:0; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; color:var(--navy); text-align:center; }
-  .period-content{ flex:1; min-width:0; }
-  .period-subject{ font-weight:700; font-size:13px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .period-class{ font-size:11.5px; color:var(--ink-soft); font-weight:700; }
-  .period-empty{ font-size:12px; color:#B7ABCE; font-style:italic; }
-  .period-edit-icon{ color:#C9C2DA; font-size:14px; flex-shrink:0; }
+  /* Compact "one-screen" schedule rail: slim rows with a left time-rail so the
+     whole day fits without scrolling; recesses collapse into thin dividers. */
+  .schedule-rail{ position:relative; padding-left:2px; }
+  .period-row{ position:relative; display:flex; align-items:center; gap:8px; background:var(--card); border-radius:10px; padding:5px 10px; margin-bottom:4px; box-shadow:0 1px 4px rgba(var(--shadow-c),.06); cursor:pointer; min-height:30px; }
+  .period-row.recess{ background:transparent; box-shadow:none; padding:1px 10px; min-height:auto; margin-bottom:3px; opacity:.7; }
+  .period-row.recess .period-content .period-subject{ font-size:9.5px; font-weight:800; color:var(--ink-soft); }
+  .period-row.recess .period-time{ font-size:9px; }
+  .period-row.active-now{ background:var(--school-bg); box-shadow:0 0 0 1.5px var(--school) inset; }
+  .period-time{ width:64px; flex-shrink:0; font-size:9.5px; font-weight:800; color:var(--ink-soft); line-height:1.2; }
+  .period-label{ width:24px; flex-shrink:0; font-family:'Quicksand',sans-serif; font-weight:700; font-size:10.5px; color:var(--navy); text-align:center; }
+  .period-content{ flex:1; min-width:0; display:flex; align-items:baseline; gap:6px; }
+  .period-subject{ font-weight:700; font-size:11.5px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .period-class{ font-size:10px; color:var(--ink-soft); font-weight:700; flex-shrink:0; }
+  .period-empty{ font-size:11px; color:#B7ABCE; font-style:italic; }
+  .period-edit-icon{ color:#C9C2DA; font-size:12px; flex-shrink:0; }
 
   .after-school-label{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; color:var(--ink); margin:18px 0 8px; }
-  .section-header-row{ display:flex; align-items:center; justify-content:space-between; margin:18px 0 8px; }
+  .section-header-row{ display:flex; align-items:center; justify-content:space-between; margin:18px 0 8px; gap:6px; }
   .section-header-row .after-school-label{ margin:0; }
+  .header-actions{ display:flex; gap:6px; flex-shrink:0; }
+  .cutoff-btn{ font-size:10px; font-weight:800; color:var(--ink-soft); background:var(--card); border:none; border-radius:20px; padding:6px 9px; cursor:pointer; box-shadow:0 2px 8px rgba(var(--shadow-c),.05); white-space:nowrap; }
+  .wrapup-btn{ display:block; width:100%; margin-top:14px; border:none; border-radius:14px; padding:12px; background:linear-gradient(135deg,var(--accent-grad-1),var(--accent-grad-2)); color:#fff; font-weight:800; font-size:12.5px; cursor:pointer; box-shadow:0 4px 14px rgba(var(--shadow-c),.18); }
+  .wrapup-btn:active{ opacity:.85; }
+  .now-collapsed-card{ display:flex; align-items:center; justify-content:space-between; background:var(--card); border-radius:12px; padding:11px 13px; margin-bottom:8px; cursor:pointer; box-shadow:0 2px 8px rgba(var(--shadow-c),.05); font-size:11.5px; font-weight:700; color:var(--ink-soft); }
+  #wrapupBody div{ margin-bottom:8px; }
   .clear-done-btn{ border:none; background:transparent; color:var(--ink-soft); font-family:'Nunito',sans-serif; font-weight:700; font-size:11px; cursor:pointer; padding:4px 2px; }
   .clear-done-btn:active{ opacity:.6; }
   .simple-card{ display:flex; align-items:center; gap:11px; background:var(--card); border-radius:14px; padding:10px 13px; margin-bottom:7px; box-shadow:0 2px 8px rgba(46,42,69,.05); }
@@ -109,7 +213,7 @@
   .todo-title{ font-size:13.5px; font-weight:700; color:var(--ink); }
   .todo-title.checked{ text-decoration:line-through; color:var(--ink-soft); }
   .todo-meta{ font-size:11.5px; color:var(--ink-soft); font-weight:600; margin-top:1px; }
-  .todo-tag{ font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:8px; flex-shrink:0; }
+  .todo-tag{ font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:8px; flex-shrink:0; cursor:pointer; }
   .brain-dump{ margin:14px 0 4px; background:linear-gradient(135deg,#F1E7FA,#E4EFFB); border-radius:16px; padding:13px 15px; display:flex; align-items:flex-end; gap:10px; }
   .brain-dump textarea{ flex:1; border:none; background:transparent; outline:none; font-family:'Nunito',sans-serif; font-weight:700; font-size:13px; color:var(--ink); resize:none; max-height:140px; overflow-y:auto; line-height:1.4; padding:2px 0; }
   .brain-dump textarea::placeholder{ color:#8B84A8; font-weight:600; }
@@ -204,7 +308,7 @@
 
   /* ---------- FAB / tabbar ---------- */
   .fab{ position:absolute; right:20px; bottom:calc(90px + env(safe-area-inset-bottom)); width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg,#8B7FD1,#6FA8DC); color:#fff; border:none; font-size:26px; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 20px rgba(111,168,220,0.4); cursor:pointer; z-index:15; }
-  .tabbar{ position:absolute; left:0; right:0; bottom:0; background:rgba(255,255,255,0.9); backdrop-filter:blur(14px); border-top:1px solid var(--line); display:flex; align-items:flex-start; padding:9px 4px calc(6px + env(safe-area-inset-bottom)); z-index:16; }
+  .tabbar{ position:absolute; left:0; right:0; bottom:0; background:var(--tabbar-bg); backdrop-filter:blur(14px); border-top:1px solid var(--line); display:flex; align-items:flex-start; padding:9px 4px calc(6px + env(safe-area-inset-bottom)); z-index:16; flex-shrink:0; }
   .tab{ flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; background:none; border:none; cursor:pointer; color:var(--ink-soft); font-family:'Nunito',sans-serif; font-weight:800; font-size:10px; padding:2px; }
   .tab svg{ width:21px; height:21px; }
   .tab.active{ color:var(--focus); }
@@ -216,7 +320,7 @@
   /* ---------- bottom sheet ---------- */
   .sheet-overlay{ position:fixed; inset:0; max-width:480px; margin:0 auto; background:rgba(15,13,26,0.42); opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:60; }
   .sheet-overlay.show{ opacity:1; pointer-events:auto; }
-  .sheet{ position:fixed; left:0; right:0; bottom:0; max-width:480px; margin:0 auto; background:#fff; border-radius:22px 22px 0 0; padding:16px 20px calc(20px + env(safe-area-inset-bottom)); transform:translateY(100%); transition:transform .32s cubic-bezier(.32,.72,0,1); z-index:61; box-shadow:0 -10px 30px rgba(0,0,0,.15); }
+  .sheet{ position:fixed; left:0; right:0; bottom:0; max-width:480px; margin:0 auto; background:var(--sheet-bg); border-radius:22px 22px 0 0; padding:16px 20px calc(20px + env(safe-area-inset-bottom)); transform:translateY(100%); transition:transform .32s cubic-bezier(.32,.72,0,1); z-index:61; box-shadow:0 -10px 30px rgba(0,0,0,.15); }
   .sheet.show{ transform:translateY(0); }
   .sheet-handle{ width:36px; height:4px; background:#E0DCEE; border-radius:2px; margin:0 auto 14px; }
   .sheet-title{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:15px; color:var(--ink); margin-bottom:12px; }
@@ -226,6 +330,13 @@
   .sheet-btn{ flex:1; padding:12px; border:none; border-radius:12px; font-weight:800; font-size:13px; cursor:pointer; }
   .sheet-btn.save{ background:var(--navy); color:#fff; }
   .sheet-btn.clear{ background:#F3F0FA; color:var(--ink-soft); }
+
+  /* ---------- theme / skin picker ---------- */
+  .skin-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding-bottom:4px; }
+  .skin-swatch{ border:none; cursor:pointer; border-radius:14px; padding:10px 8px 8px; background:var(--card); box-shadow:0 2px 8px rgba(var(--shadow-c),.08); display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .skin-swatch.active{ box-shadow:0 0 0 2px var(--focus) inset, 0 2px 8px rgba(var(--shadow-c),.08); }
+  .skin-swatch .sw-dot{ width:34px; height:34px; border-radius:50%; box-shadow:inset 0 0 0 3px rgba(255,255,255,.4); }
+  .skin-swatch .sw-label{ font-size:10px; font-weight:800; color:var(--ink); text-align:center; line-height:1.25; }
 
   /* Keyboard-visible focus ring for interactive controls (mouse/touch users unaffected) */
   button:focus-visible, .todo-check:focus-visible,
@@ -242,8 +353,11 @@
 <div id="app">
 
   <div class="app-header">
-    <div class="greeting" id="greeting">Good morning, Natalius <span class="streak">🔥 6 day streak</span></div>
-    <div class="subdate" id="subdate">–</div>
+    <div class="header-text">
+      <div class="greeting" id="greeting">Good morning, Natalius <span class="streak">🔥 6 day streak</span></div>
+      <div class="subdate" id="subdate">–</div>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Change skin">🎨</button>
   </div>
 
   <div class="install-banner" id="installBanner">
@@ -257,23 +371,21 @@
     <div class="view active" id="view-today">
       <div class="section-pad">
         <div class="day-tabs" id="dayTabs"></div>
-        <div id="periodList"></div>
-
-        <div class="after-school-label">After School</div>
-        <div class="simple-card">
-          <div class="icon-badge" style="background:var(--wind-bg);">📖</div>
-          <div><div class="s-title">Reading — Patristic sources</div><div class="s-time">7:00 – 8:00 PM</div></div>
-        </div>
+        <div id="periodList" class="schedule-rail"></div>
 
         <div class="section-header-row">
           <div class="after-school-label">To-Do</div>
-          <button class="clear-done-btn" id="clearDoneBtn" type="button">🧹 Hapus selesai</button>
+          <div class="header-actions">
+            <button class="cutoff-btn" id="cutoffBtn" type="button">🌙 6PM</button>
+            <button class="clear-done-btn" id="clearDoneBtn" type="button">🧹 Hapus selesai</button>
+          </div>
         </div>
         <div class="brain-dump">
           <textarea id="brainDumpInput" rows="1" placeholder="Brain dump anything, or paste a chat…"></textarea>
           <span class="ai-pill" role="button" tabindex="0">✨ AI sort</span>
         </div>
         <div id="todoLists"></div>
+        <button class="wrapup-btn" id="wrapupBtn" type="button">🌙 Wrap up my day</button>
       </div>
     </div>
 
@@ -336,26 +448,25 @@
       </div>
     </div>
 
+    <!-- WIDGETS -->
+    <div class="view" id="view-widgets" style="position:relative; padding-bottom:12px;">
+      <div class="home-preview">
+        <div class="hp-caption">Home Screen preview — long-press to add</div>
+        <div class="widget-cal" id="widgetCal"></div>
+        <div class="widget-today">
+          <div class="wt-head">NOW &amp; NEXT</div>
+          <div class="wt-item"><div class="wt-dot" style="background:var(--school);"></div><div class="wt-text">Teach — check schedule</div><div class="wt-time" id="widgetTime1">–</div></div>
+        </div>
+        <div class="add-widget-hint">Tap and hold the Home Screen, then tap the + in the top corner and search "Petra Planner" to add these widgets.</div>
+      </div>
+    </div>
+
   </div>
 
   <div class="cal-legend" style="display:none;" id="calLegendTemplate">
     <span><span class="sw" style="background:var(--focus-bg);"></span>Mid-semester / event</span>
     <span><span class="sw" style="background:var(--personal-bg);"></span>Holiday / Sunday</span>
     <span><span class="sw" style="background:var(--navy);"></span>Today</span>
-  </div>
-
-  <!-- WIDGETS -->
-  <div class="view" id="view-widgets" style="position:relative; padding-bottom:100px;">
-    <div class="home-preview">
-      <div class="hp-caption">Home Screen preview — long-press to add</div>
-      <div class="widget-cal" id="widgetCal"></div>
-      <div class="widget-today">
-        <div class="wt-head">NOW &amp; NEXT</div>
-        <div class="wt-item"><div class="wt-dot" style="background:var(--school);"></div><div class="wt-text">Teach — check schedule</div><div class="wt-time" id="widgetTime1">–</div></div>
-        <div class="wt-item"><div class="wt-dot" style="background:var(--wind);"></div><div class="wt-text">Reading — Patristic sources</div><div class="wt-time">7:00 PM</div></div>
-      </div>
-      <div class="add-widget-hint">Tap and hold the Home Screen, then tap the + in the top corner and search "Petra Planner" to add these widgets.</div>
-    </div>
   </div>
 
   <button class="fab" id="fabBtn" aria-label="Add task or block">+</button>
@@ -402,6 +513,23 @@
     <div id="dayEventsList" style="max-height:50vh; overflow-y:auto;"></div>
     <div class="sheet-actions">
       <button class="sheet-btn save" id="dayEventsClose" style="flex:1;">Tutup</button>
+    </div>
+  </div>
+
+  <div class="sheet-overlay" id="themeOverlay"></div>
+  <div class="sheet" id="themeSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Choose a skin</div>
+    <div class="skin-grid" id="skinGrid"></div>
+  </div>
+
+  <div class="sheet-overlay" id="wrapupOverlay"></div>
+  <div class="sheet" id="wrapupSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">🌙 Day wrap-up</div>
+    <div id="wrapupBody"></div>
+    <div class="sheet-actions">
+      <button class="sheet-btn save" id="wrapupConfirm" style="flex:1;">Close out my day</button>
     </div>
   </div>
 
@@ -568,7 +696,12 @@ function loadState(key, fallback){
 function saveState(key, val){
   try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){}
 }
-let scheduleState = loadState('petra_schedule_v1', {
+// Your fixed weekly teaching load — the single source of truth. This block
+// is force-merged into scheduleState on every load (below), so it can never
+// go stale from an older cached localStorage value on your phone/browser.
+// Any other periods you've filled in yourself (piket, ekskul, etc.) are left
+// exactly as you set them.
+const FIXED_SCHEDULE = {
   Senin: {
     jp4:{subject:'Bahasa Inggris', cls:'3B'}, jp5:{subject:'Bahasa Inggris', cls:'3B'},
     jp8:{subject:'Bahasa Inggris', cls:'5B'}, jp9:{subject:'Bahasa Inggris', cls:'5B'},
@@ -591,7 +724,12 @@ let scheduleState = loadState('petra_schedule_v1', {
     jp5:{subject:'Bahasa Inggris', cls:'5A'}, jp6:{subject:'Bahasa Inggris', cls:'5A'},
     jp8:{subject:'Bahasa Inggris', cls:'5B'}, jp9:{subject:'Bahasa Inggris', cls:'5B'},
   },
+};
+let scheduleState = loadState('petra_schedule_v1', {});
+weekdays.forEach(day=>{
+  scheduleState[day] = Object.assign({}, scheduleState[day] || {}, FIXED_SCHEDULE[day] || {});
 });
+saveState('petra_schedule_v1', scheduleState);
 let streakState = loadState('petra_streak_v1', { completedDates: [] });
 function recordCompletionIfDone(todo){
   if(!todo.done) return;
@@ -714,7 +852,7 @@ let customEvents = loadState('petra_custom_events_v1', buildDefaultCustomEvents(
 // bucket is computed at render time from dueDate, not stored.
 let todoState = loadState('petra_todos_v1', [
   {id:'seed1', title:'Print vocabulary flashcards', meta:'15 min', tag:'School', tagColor:'focus', done:true, dueDate: fmt(new Date())},
-  {id:'seed2', title:'Reply to Kepala Sekolah re: exam schedule', meta:'10 min', tag:'Admin', tagColor:'personal', done:false, dueDate: fmt(new Date())},
+  {id:'seed2', title:'Reply to Kepala Sekolah re: exam schedule', meta:'10 min', tag:'Admin', tagColor:'personal', done:false, dueDate: null},
   {id:'seed3', title:"Prep materials for next week's unit", meta:'20 min', tag:'School', tagColor:'focus', done:false, dueDate: fmt(new Date(Date.now()+86400000))},
 ]);
 
@@ -996,11 +1134,21 @@ function parseBrainDump(raw, refDate){
       }
     }
   }
-  if(!dueDate) dueDate = new Date(today); // nothing mentioned → defaults to reference date, silently
+  // Nothing mentioned → leave dueDate null. That's the whole point: an
+  // unconscious brain-dump with no date attached is exactly the "might
+  // forget this" item that should land in NOW, not get silently scheduled
+  // for today and buried under things that already have a real date.
 
-  // ---- 4. School tag / class code ----
+  // ---- 4. School / Admin / Family tag ----
+  // Family gets first crack: a "jemput anak" or "istri" mention shouldn't get
+  // swept into School just because it happens to share a word with a class
+  // note. This is the whole point of a separate Family bucket — home life
+  // shouldn't get buried under student data.
   let tag = 'Admin', tagColor = 'personal', classCode = null;
-  if(m = text.match(/\b([1-6])\s?([ABCDabcd])\b/)){
+  const familyRe = /\b(anak(\s+saya|\s+kami)?|istri|suami|keluarga|jemput|antar(\s+jemput)?|orang\s?tua|ortu|ultah|ulang tahun|dokter|checkup|check-?up|rumah sakit|puskesmas|acara keluarga|libur keluarga)\b/i;
+  if(familyRe.test(text)){
+    tag = 'Family'; tagColor = 'wind';
+  } else if(m = text.match(/\b([1-6])\s?([ABCDabcd])\b/)){
     classCode = m[1] + m[2].toUpperCase();
     tag = 'School'; tagColor = 'focus';
   } else if(/\b(rapor|sumatif|ulangan|ujian|mengajar|kelas|piket|gukar|ekskul|ekstrakurikuler|kokurikuler|wali kelas|upacara|pramuka)\b/i.test(text)){
@@ -1021,7 +1169,7 @@ function parseBrainDump(raw, refDate){
   if(classCode) metaBits.push('Kelas ' + classCode);
   if(location) metaBits.push('📍 ' + location);
 
-  return { title, dueDate: fmt(dueDate), dateFlag, hasDateSignal, meta: metaBits.join(' · '), tag, tagColor, location, priority };
+  return { title, dueDate: dueDate ? fmt(dueDate) : null, dateFlag, hasDateSignal, meta: metaBits.join(' · '), tag, tagColor, location, priority };
 }
 
 /* ================= CHAT-PASTE DETECTION (offline) =================
@@ -1080,32 +1228,64 @@ function parseChatBlock(raw){
   });
 }
 
+let cutoffHour = loadState('petra_cutoff_v1', 18); // 6PM default; null = off
+let nowExpanded = false; // manual "peek anyway" override, resets each page load
+const CUTOFF_PRESETS = [17,18,19,20,null];
+function cutoffLabel(h){ return h===null ? 'Off' : (h===12?'12PM':h>12?(h-12)+'PM':h+'AM'); }
+function renderCutoffBtn(){
+  document.getElementById('cutoffBtn').textContent = cutoffHour===null ? '🌙 Cutoff off' : '🌙 '+cutoffLabel(cutoffHour);
+}
 function renderTodos(){
   const wrap = document.getElementById('todoLists');
   const todayStr = fmt(new Date());
   const tomorrowStr = fmt(new Date(Date.now()+86400000));
-  const buckets = { now: [], next: [], later: [] };
+  // Unconscious brain-dumps with no date = urgent, stay in NOW so nothing
+  // slips through the cracks. The moment a date is attached, it's already
+  // scheduled/known, so it moves to NEXT (soonest date first).
+  const buckets = { now: [], next: [] };
   todoState.forEach(t=>{
-    if(!t.dueDate || t.dueDate === todayStr) buckets.now.push(t);
-    else if(t.dueDate === tomorrowStr) buckets.next.push(t);
-    else buckets.later.push(t);
+    if(!t.dueDate) buckets.now.push(t);
+    else buckets.next.push(t);
   });
+  buckets.next.sort((a,b)=> a.dueDate < b.dueDate ? -1 : a.dueDate > b.dueDate ? 1 : 0);
+  // Evening cutoff: once you're past your set hour, open school-hours loops
+  // quietly collapse instead of nagging you all evening at home. One tap
+  // still reveals them if you actually need to check something.
+  const isEvening = cutoffHour !== null && new Date().getHours() >= cutoffHour;
   function section(label, cls, items){
     if(items.length === 0) return '';
+    if(cls === 'now' && isEvening && !nowExpanded){
+      return `<div class="todo-section-label ${cls}"><span class="dot"></span> ${label}</div>
+        <div class="now-collapsed-card" id="nowCollapsedCard">🌙 ${items.length} open task${items.length>1?'s':''} — tap to peek <span>▾</span></div>`;
+    }
     return `<div class="todo-section-label ${cls}"><span class="dot"></span> ${label}</div>` + items.map(t=>{
-      const dueLabel = t.dueDate === todayStr ? 'Due today' : t.dueDate === tomorrowStr ? 'Tomorrow' : t.dueDate ? t.dueDate : 'This week';
+      const dueLabel = t.dueDate === todayStr ? 'Due today' : t.dueDate === tomorrowStr ? 'Tomorrow' : t.dueDate ? t.dueDate : '';
       const flagBadge = t.dateFlag ? ' <span style="color:var(--personal);font-weight:800;">· cek tanggal</span>' : '';
       const senderBit = t.sender ? `Dari ${t.sender}` : '';
       const metaParts = [t.meta, senderBit].filter(Boolean).join(' · ');
       const colorVar = TAG_COLORS[t.tagColor] || '--focus';
       return `<div class="todo-item" data-id="${t.id}">
         <div class="todo-check ${t.done?'checked':''}" role="checkbox" aria-checked="${t.done}" aria-label="${t.title.replace(/"/g,'&quot;')}" tabindex="0">${t.done?'✓':''}</div>
-        <div class="todo-text"><div class="todo-title ${t.done?'checked':''}">${t.title}</div><div class="todo-meta">${dueLabel}${metaParts?' · '+metaParts:''}${flagBadge}</div></div>
-        <div class="todo-tag" style="background:var(${colorVar}-bg); color:var(${colorVar});">${t.tag}</div>
+        <div class="todo-text"><div class="todo-title ${t.done?'checked':''}">${t.title}</div><div class="todo-meta">${dueLabel}${metaParts?(dueLabel?' · ':'')+metaParts:''}${flagBadge}</div></div>
+        <div class="todo-tag" data-id="${t.id}" style="background:var(${colorVar}-bg); color:var(${colorVar});" title="Tap to change category">${t.tag}</div>
       </div>`;
     }).join('');
   }
-  wrap.innerHTML = section('NOW','now',buckets.now) + section('NEXT','next',buckets.next) + section('LATER','later',buckets.later);
+  wrap.innerHTML = section('NOW','now',buckets.now) + section('NEXT','next',buckets.next);
+  const collapsedCard = document.getElementById('nowCollapsedCard');
+  if(collapsedCard) collapsedCard.addEventListener('click', ()=>{ nowExpanded = true; renderTodos(); });
+  wrap.querySelectorAll('.todo-tag').forEach(chip=>{
+    chip.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const t = todoState.find(x=>x.id===chip.dataset.id);
+      const cycle = [['School','focus'],['Admin','personal'],['Family','wind']];
+      const curIdx = cycle.findIndex(c=>c[0]===t.tag);
+      const next = cycle[(curIdx+1) % cycle.length];
+      t.tag = next[0]; t.tagColor = next[1];
+      saveState('petra_todos_v1', todoState);
+      renderTodos();
+    });
+  });
   wrap.querySelectorAll('.todo-item').forEach(row=>{
     const check = row.querySelector('.todo-check');
     const toggle = ()=>{
@@ -1207,6 +1387,53 @@ function clearCompletedTodos(){
   showToast(`🧹 ${removed} tugas selesai dihapus`);
 }
 document.getElementById('clearDoneBtn').addEventListener('click', clearCompletedTodos);
+
+renderCutoffBtn();
+document.getElementById('cutoffBtn').addEventListener('click', ()=>{
+  const idx = CUTOFF_PRESETS.indexOf(cutoffHour);
+  cutoffHour = CUTOFF_PRESETS[(idx+1) % CUTOFF_PRESETS.length];
+  saveState('petra_cutoff_v1', cutoffHour);
+  renderCutoffBtn();
+  renderTodos();
+});
+
+/* ---- End-of-day wrap-up: a small ritual to close open loops on purpose,
+   instead of carrying them around in your head all evening. Items still due
+   today roll to tomorrow; NOW items (undated) just stay put — they were
+   never going to expire anyway, that's the point of NOW. ---- */
+function openWrapUp(){
+  const todayStr = fmt(new Date());
+  const doneItems = todoState.filter(t=>t.done);
+  const dueTodayOpen = todoState.filter(t=>!t.done && t.dueDate === todayStr);
+  const stillNow = todoState.filter(t=>!t.done && !t.dueDate);
+  document.getElementById('wrapupBody').innerHTML = `
+    <div>✅ <b style="color:var(--ink);">${doneItems.length}</b> completed today</div>
+    <div>↪️ <b style="color:var(--ink);">${dueTodayOpen.length}</b> ${dueTodayOpen.length===1?'task':'tasks'} due today not finished — will roll to tomorrow</div>
+    <div>📌 <b style="color:var(--ink);">${stillNow.length}</b> still open in NOW — stays put until you check it off</div>
+  `;
+  document.getElementById('wrapupOverlay').classList.add('show');
+  document.getElementById('wrapupSheet').classList.add('show');
+}
+function closeWrapUpSheet(){
+  document.getElementById('wrapupOverlay').classList.remove('show');
+  document.getElementById('wrapupSheet').classList.remove('show');
+}
+function confirmWrapUp(){
+  const todayStr = fmt(new Date());
+  const tomorrowStr = fmt(new Date(Date.now()+86400000));
+  let rolled = 0;
+  todoState.forEach(t=>{ if(!t.done && t.dueDate === todayStr){ t.dueDate = tomorrowStr; rolled++; } });
+  const before = todoState.length;
+  todoState = todoState.filter(t=>!t.done);
+  const cleared = before - todoState.length;
+  saveState('petra_todos_v1', todoState);
+  renderTodos();
+  closeWrapUpSheet();
+  showToast(`🌙 Day closed — ${cleared} cleared, ${rolled} rolled to tomorrow. Rest well!`);
+}
+document.getElementById('wrapupBtn').addEventListener('click', openWrapUp);
+document.getElementById('wrapupConfirm').addEventListener('click', confirmWrapUp);
+document.getElementById('wrapupOverlay').addEventListener('click', closeWrapUpSheet);
 
 /* ================= RENDER: CALENDAR ================= */
 function buildMonthCard(year, monthIndex, heCount){
@@ -1454,6 +1681,48 @@ if(standalone || loadState('petra_banner_dismissed', false)){
 document.getElementById('dismissBanner').addEventListener('click', ()=>{
   document.getElementById('installBanner').style.display = 'none';
   saveState('petra_banner_dismissed', true);
+});
+
+/* ================= THEME / ALPHA-SKIN PICKER ================= */
+const skins = [
+  {id:'petra',       name:'Petra Lavender', c1:'#8B7FD1', c2:'#6FA8DC'},
+  {id:'whistler',     name:'Whistler Blue',  c1:'#2E7BC4', c2:'#59B6E8'},
+  {id:'silver',       name:'Luna Silver',    c1:'#9A9A9A', c2:'#C7C7C7'},
+  {id:'terracotta',   name:'Terracotta Autumn', c1:'#C77A2E', c2:'#D1495B'},
+  {id:'emerald',      name:'Emerald Isle',   c1:'#0F5C42', c2:'#2FAE7E'},
+  {id:'royale',       name:'Royale Amethyst',c1:'#6B4EA6', c2:'#8A5FBF'},
+  {id:'obsidian',     name:'Obsidian Night', c1:'#6FA8DC', c2:'#8B7FD1'},
+  {id:'carbon',       name:'Carbon Graphite',c1:'#5B93C9', c2:'#3D6E9B'},
+  {id:'midnight',     name:'Midnight Navy',  c1:'#5C8FD6', c2:'#3A5F9E'},
+  {id:'royale-dark',  name:'Royale Noir',    c1:'#9B7DE0', c2:'#B08CE8'},
+];
+function applyTheme(id){
+  if(id === 'petra') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', id);
+  saveState('petra_theme_v1', id);
+  renderSkinGrid(id);
+}
+function renderSkinGrid(activeId){
+  document.getElementById('skinGrid').innerHTML = skins.map(s=>`
+    <button class="skin-swatch ${s.id===activeId?'active':''}" data-skin="${s.id}" type="button">
+      <span class="sw-dot" style="background:linear-gradient(135deg,${s.c1},${s.c2});"></span>
+      <span class="sw-label">${s.name}</span>
+    </button>`).join('');
+  document.querySelectorAll('.skin-swatch').forEach(btn=>{
+    btn.addEventListener('click', ()=> applyTheme(btn.dataset.skin));
+  });
+}
+(function initTheme(){
+  const saved = loadState('petra_theme_v1', 'petra');
+  applyTheme(saved);
+})();
+document.getElementById('themeBtn').addEventListener('click', ()=>{
+  document.getElementById('themeOverlay').classList.add('show');
+  document.getElementById('themeSheet').classList.add('show');
+});
+document.getElementById('themeOverlay').addEventListener('click', ()=>{
+  document.getElementById('themeOverlay').classList.remove('show');
+  document.getElementById('themeSheet').classList.remove('show');
 });
 
 /* header date */

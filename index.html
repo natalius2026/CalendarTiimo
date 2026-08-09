@@ -289,23 +289,6 @@
   .cal-legend span{ display:flex; align-items:center; gap:4px; }
   .cal-legend .sw{ width:9px; height:9px; border-radius:3px; }
 
-  /* ---------- WIDGETS ---------- */
-  .home-preview{ margin:8px 22px 0; background:linear-gradient(160deg, #3A3560 0%, #1C1832 100%); border-radius:26px; padding:20px 14px 16px; }
-  .home-preview .hp-caption{ text-align:center; color:#C9C2E8; font-size:11px; font-weight:700; margin-bottom:14px; }
-  .widget-cal{ background:rgba(255,255,255,0.95); border-radius:20px; padding:14px; margin-bottom:12px; }
-  .widget-cal .wc-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
-  .widget-cal .wc-month{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; color:var(--navy); }
-  .widget-cal .wc-today{ font-size:20px; font-weight:800; color:var(--school); font-family:'Quicksand',sans-serif; }
-  .widget-cal .cal-grid .day{ padding:4px 0; font-size:9px; }
-  .widget-today{ background:rgba(255,255,255,0.95); border-radius:20px; padding:14px; }
-  .widget-today .wt-head{ font-size:10px; font-weight:800; color:var(--ink-soft); letter-spacing:.04em; margin-bottom:8px; }
-  .widget-today .wt-item{ display:flex; align-items:center; gap:9px; padding:6px 0; border-top:1px solid var(--line); }
-  .widget-today .wt-item:first-of-type{ border-top:none; }
-  .widget-today .wt-dot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-  .widget-today .wt-text{ font-size:11px; font-weight:700; color:var(--ink); }
-  .widget-today .wt-time{ margin-left:auto; font-size:11px; font-weight:700; color:var(--ink-soft); }
-  .add-widget-hint{ text-align:center; color:#C9C2E8; font-size:10.5px; font-weight:600; margin-top:14px; line-height:1.5; }
-
   /* ---------- FAB / tabbar ---------- */
   .fab{ position:absolute; right:20px; bottom:calc(90px + env(safe-area-inset-bottom)); width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg,#8B7FD1,#6FA8DC); color:#fff; border:none; font-size:26px; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 20px rgba(111,168,220,0.4); cursor:pointer; z-index:15; }
   .tabbar{ position:absolute; left:0; right:0; bottom:0; background:var(--tabbar-bg); backdrop-filter:blur(14px); border-top:1px solid var(--line); display:flex; align-items:flex-start; padding:9px 4px calc(6px + env(safe-area-inset-bottom)); z-index:16; flex-shrink:0; }
@@ -448,19 +431,6 @@
       </div>
     </div>
 
-    <!-- WIDGETS -->
-    <div class="view" id="view-widgets" style="position:relative; padding-bottom:12px;">
-      <div class="home-preview">
-        <div class="hp-caption">Home Screen preview — long-press to add</div>
-        <div class="widget-cal" id="widgetCal"></div>
-        <div class="widget-today">
-          <div class="wt-head">NOW &amp; NEXT</div>
-          <div class="wt-item"><div class="wt-dot" style="background:var(--school);"></div><div class="wt-text">Teach — check schedule</div><div class="wt-time" id="widgetTime1">–</div></div>
-        </div>
-        <div class="add-widget-hint">Tap and hold the Home Screen, then tap the + in the top corner and search "Petra Planner" to add these widgets.</div>
-      </div>
-    </div>
-
   </div>
 
   <div class="cal-legend" style="display:none;" id="calLegendTemplate">
@@ -483,10 +453,6 @@
     <button class="tab" data-view="school">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6-9 6-9-6z"></path><path d="M6 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5"></path></svg>
       School
-    </button>
-    <button class="tab" data-view="widgets">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
-      Widgets
     </button>
   </div>
 
@@ -1614,7 +1580,6 @@ function importEventsFromJSON(file){
     renderPeriods();
     const activeSem = document.querySelector('.sem-tabs button.active');
     renderSemester(activeSem && activeSem.dataset.sem === '2' ? 2 : 1);
-    renderWidgetCal();
     showToast(`✅ ${added} event ditambahkan${skipped ? ', ' + skipped + ' dilewati' : ''}`);
   };
   reader.readAsText(file);
@@ -1628,19 +1593,8 @@ document.getElementById('importEventsFile').addEventListener('change', (e)=>{
   e.target.value = '';
 });
 
-/* ================= RENDER: WIDGET PREVIEW ================= */
-function renderWidgetCal(){
-  const now = new Date();
-  const y=now.getFullYear(), m=now.getMonth();
-  const heEntry = [...sem1Months,...sem2Months].find(x=>x.y===y && x.m===m);
-  document.getElementById('widgetCal').innerHTML = `
-    <div class="wc-head"><span class="wc-month">${monthNamesID[m]}</span><span class="wc-today">${now.getDate()}</span></div>
-    ${buildMonthCard(y,m, heEntry?heEntry.he:'–').replace(/<div class="cal-title">.*?<\/div>/,'').replace(/<div class="cal-card"[^>]*>/,'').replace(/<\/div>\s*$/,'')}
-  `;
-}
-
 /* ================= NAV / GENERIC UI ================= */
-const views = ['today','calendar','school','widgets'];
+const views = ['today','calendar','school'];
 function setView(name){
   views.forEach(v=> document.getElementById('view-'+v).classList.toggle('active', v===name));
   document.querySelectorAll('.tab').forEach(b=> b.classList.toggle('active', b.dataset.view===name));
@@ -1750,7 +1704,6 @@ renderEvents();
 renderDailyRoutine();
 renderTodos();
 renderSemester(1);
-renderWidgetCal();
 setInterval(renderPeriods, 60000);
 </script>
 
